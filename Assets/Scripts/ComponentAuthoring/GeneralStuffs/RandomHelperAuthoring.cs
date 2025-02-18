@@ -2,7 +2,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-public struct RandomData : IComponentData {
+public struct RandomHelperData : IComponentData {
     public Unity.Mathematics.Random random;
 
     public bool  Bool  => random.NextBool();
@@ -11,11 +11,11 @@ public struct RandomData : IComponentData {
     public float Float => random.NextFloat();
 }
 
-public class RandomAuthoring : MonoBehaviour {
-    public class Baker : Baker<RandomAuthoring> {
-        public override void Bake(RandomAuthoring authoring) {
+public class RandomHelperAuthoring : MonoBehaviour {
+    public class Baker : Baker<RandomHelperAuthoring> {
+        public override void Bake(RandomHelperAuthoring authoring) {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new RandomData {
+            AddComponent(entity, new RandomHelperData {
                 random = new((uint)(DateTime.Now.Ticks % uint.MaxValue))
             });
         }
