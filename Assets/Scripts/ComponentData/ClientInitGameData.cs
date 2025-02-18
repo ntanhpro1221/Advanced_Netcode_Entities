@@ -1,5 +1,5 @@
 ﻿using Unity.Entities;
 
-public struct TeamTypeInfo : IComponentData {
+public struct ClientInitGameData : IComponentData {
     public TeamType teamType;
 }

@@ -7,7 +7,7 @@ public struct ConnectionData {
     public ushort port;
     public TeamType teamType;
 
-    public ConnectionData WithIpAddress(string ipAddress) {
+    public readonly ConnectionData WithIpAddress(string ipAddress) {
         ConnectionData data = this;
         data.ipAddress = ipAddress;
         return data;

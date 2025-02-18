@@ -5,36 +5,35 @@ using Unity.NetCode;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation | WorldSystemFilterFlags.ThinClientSimulation)]
 public partial struct GoInGameClientSystem : ISystem {
-    private EntityQuery pendingNetworkIdQuery;
+    private EntityQuery _pendingNetworkIdQuery;
 
     [BurstCompile]
     public void OnCreate(ref SystemState state) {
-        pendingNetworkIdQuery = new EntityQueryBuilder(Allocator.Temp)
-            .WithAll<NetworkId>()
-            .WithNone<NetworkStreamInGame>()
-            .Build(state.EntityManager);
+        state.RequireForUpdate<ClientInitGameData>();
+        _pendingNetworkIdQuery = new EntityQueryBuilder(Allocator.Temp)
+                                 .WithAll<NetworkId>()
+                                 .WithNone<NetworkStreamInGame>()
+                                 .Build(state.EntityManager);
 
-        state.RequireForUpdate(pendingNetworkIdQuery);
-        state.RequireForUpdate<TeamTypeInfo>();
+        state.RequireForUpdate(_pendingNetworkIdQuery);
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state) {
         var ecb = state
-            .World
-            .GetExistingSystemManaged<EndSimulationEntityCommandBufferSystem>()
-            .CreateCommandBuffer();
+                  .World
+                  .GetExistingSystemManaged<EndSimulationEntityCommandBufferSystem>()
+                  .CreateCommandBuffer();
 
-        TeamType teamType = SystemAPI.GetSingleton<TeamTypeInfo>().teamType;
+        var teamType = SystemAPI.GetSingleton<ClientInitGameData>().teamType;
 
-        foreach (Entity entity in pendingNetworkIdQuery.ToEntityArray(Allocator.Temp)) {
+        foreach (var entity in _pendingNetworkIdQuery.ToEntityArray(Allocator.Temp)) {
             // mark in game client-side
             ecb.AddComponent<NetworkStreamInGame>(entity);
 
             // request in game server-side
-            Entity rpcEntity = ecb.CreateEntity();
+            var rpcEntity = ecb.CreateEntity();
             ecb.AddComponent(rpcEntity, new GoInGameRequestRpc {
-                teamType = teamType,
+                teamType = teamType
             });
             ecb.AddComponent<SendRpcCommandRequest>(rpcEntity);
         }

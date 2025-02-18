@@ -6,7 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class ClientConnectionManager : MonoBehaviour {
     private void Start() {
-        ConnectionMenuUI.Instance.SubscribeToConnectButton(OnConnect);
+        ConnectionMenuUI.Instance.AddListener_ConnectButton(OnConnect);
+    }
+
+    private void OnDisable() {
+        ConnectionMenuUI.Instance?.RemoveListener_ConnectButton(OnConnect);
     }
 
     private void OnConnect(ConnectionData data) {
@@ -27,7 +31,7 @@ public class ClientConnectionManager : MonoBehaviour {
                 throw new System.Exception("Unknown connection mode");
         }
 
-        World.DefaultGameObjectInjectionWorld.EntityManager.CreateSingleton(new TeamTypeInfo {
+        World.DefaultGameObjectInjectionWorld.EntityManager.CreateSingleton(new ClientInitGameData() {
             teamType = data.teamType,
         });
     }
