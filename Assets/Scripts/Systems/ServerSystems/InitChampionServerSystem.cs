@@ -15,6 +15,7 @@ public partial struct InitChampionServerSystem : ISystem {
     
     [BurstCompile]
     public void OnCreate(ref SystemState state) {
+        state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate(new EntityQueryBuilder(Allocator.Temp)
             .WithAll<
                 ChampionTag
@@ -29,14 +30,13 @@ public partial struct InitChampionServerSystem : ISystem {
     public void OnDestroy(ref SystemState state) {
         _teamTypeList.Dispose();
     }
-
+    
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-        var ecb = state
-            .World
-            .GetExistingSystemManaged<EndSimulationEntityCommandBufferSystem>()
-            .CreateCommandBuffer();
-
+        var ecb = SystemAPI
+            .GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+            .CreateCommandBuffer(state.WorldUnmanaged);
+        
         foreach (var (
             localTrans
           , ghostOwner
@@ -67,7 +67,7 @@ public partial struct InitChampionServerSystem : ISystem {
             _teamTypeList.Add(teamType.ValueRO.value);
 
             // change name
-            ecb.SetName(entity, "Champion-" + ghostOwner.ValueRO.NetworkId);
+            ecb.SetName(entity, $"Champion-{ghostOwner.ValueRO.NetworkId}");
 
             // set spawn position
             localTrans.ValueRW = LocalTransform.FromPosition(teamType.ValueRO.value switch {

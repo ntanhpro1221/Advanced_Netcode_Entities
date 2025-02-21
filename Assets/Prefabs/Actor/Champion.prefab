@@ -273,10 +273,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5603367971057834547, guid: 6aed97900990bd04685ecfdf34a7270b, type: 3}
-      propertyPath: prefabId
-      value: 1b05504788f694c46b43cb8cef9dc708
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -315,6 +311,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bodyMesh: {fileID: 8328507202465675326}
+  aoePrefab: {fileID: 6556771315028139564, guid: 9edfab840ea67624aa8dc14c7fffd0af, type: 3}
+  projectilePrefab: {fileID: 6755570461981567934, guid: e8c64a36aac9f0f4c976414993d55e1b, type: 3}
 --- !u!114 &7231951054694204866
 MonoBehaviour:
   m_ObjectHideFlags: 0

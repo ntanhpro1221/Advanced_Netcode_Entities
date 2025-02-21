@@ -8,7 +8,7 @@ public struct MoveInputData : IInputComponentData {
     [GhostField]                   public bool   doneInit;
 }
 
-public struct MoveData : IInputComponentData {
+public struct MoveData : IComponentData {
     public float  moveSpeed;
     public float  rotateSpeed;
 }

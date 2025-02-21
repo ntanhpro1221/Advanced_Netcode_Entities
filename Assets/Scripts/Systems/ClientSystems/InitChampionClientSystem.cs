@@ -12,6 +12,7 @@ using Unity.Transforms;
 public partial struct InitChampionClientSystem : ISystem {
     [BurstCompile]
     public void OnCreate(ref SystemState state) {
+        state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate(new EntityQueryBuilder(Allocator.Temp)
             .WithAll<
                 ChampionTag
@@ -21,10 +22,9 @@ public partial struct InitChampionClientSystem : ISystem {
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-        var ecb = state
-            .World
-            .GetExistingSystemManaged<EndSimulationEntityCommandBufferSystem>()
-            .CreateCommandBuffer();
+        var ecb = SystemAPI
+            .GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
+            .CreateCommandBuffer(state.WorldUnmanaged);
 
         foreach (var (
             teamType

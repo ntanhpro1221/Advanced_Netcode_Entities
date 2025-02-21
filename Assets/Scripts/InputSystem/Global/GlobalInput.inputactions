@@ -996,9 +996,27 @@
             "id": "ee4d471c-0dbd-43ff-b80e-3d25c9c3b0ab",
             "actions": [
                 {
-                    "name": "Click",
+                    "name": "Move",
                     "type": "Button",
                     "id": "cebcc387-18dc-45d1-8d8d-be5a748f7371",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill_Aoe",
+                    "type": "Button",
+                    "id": "b52b360a-13b7-4eb2-8131-242f333d1d62",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill_Projectile",
+                    "type": "Button",
+                    "id": "a7a5c56d-1aec-4325-98e2-b6742df28e70",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1013,7 +1031,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Click",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1024,7 +1042,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Click",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d807968a-2809-40b6-814f-0c85376914d3",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill_Aoe",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2989debb-1dcc-4199-a5d5-7ffaa5322c23",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill_Projectile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

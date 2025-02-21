@@ -1,7 +1,5 @@
-﻿using System;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.NetCode;
 using Unity.Transforms;
 using UnityEngine;
@@ -22,6 +20,6 @@ public class FollowChampion : MonoBehaviour {
         transform.position = new(
             champTrans.Position.x
           , transform.position.y
-          , champTrans.Position.z - 7.5f);
+          , champTrans.Position.z - 7.5f);   
     }
 }

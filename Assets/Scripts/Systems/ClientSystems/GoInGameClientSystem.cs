@@ -9,6 +9,7 @@ public partial struct GoInGameClientSystem : ISystem {
 
     [BurstCompile]
     public void OnCreate(ref SystemState state) {
+        state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<ClientInitGameData>();
         _pendingNetworkIdQuery = new EntityQueryBuilder(Allocator.Temp)
                                  .WithAll<NetworkId>()
@@ -18,11 +19,11 @@ public partial struct GoInGameClientSystem : ISystem {
         state.RequireForUpdate(_pendingNetworkIdQuery);
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-        var ecb = state
-                  .World
-                  .GetExistingSystemManaged<EndSimulationEntityCommandBufferSystem>()
-                  .CreateCommandBuffer();
+        var ecb = SystemAPI
+            .GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
+            .CreateCommandBuffer(state.WorldUnmanaged);
 
         var teamType = SystemAPI.GetSingleton<ClientInitGameData>().teamType;
 

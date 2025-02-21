@@ -1082,9 +1082,27 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
             ""id"": ""ee4d471c-0dbd-43ff-b80e-3d25c9c3b0ab"",
             ""actions"": [
                 {
-                    ""name"": ""Click"",
+                    ""name"": ""Move"",
                     ""type"": ""Button"",
                     ""id"": ""cebcc387-18dc-45d1-8d8d-be5a748f7371"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill_Aoe"",
+                    ""type"": ""Button"",
+                    ""id"": ""b52b360a-13b7-4eb2-8131-242f333d1d62"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill_Projectile"",
+                    ""type"": ""Button"",
+                    ""id"": ""a7a5c56d-1aec-4325-98e2-b6742df28e70"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -1099,7 +1117,7 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Click"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1110,7 +1128,29 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Click"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d807968a-2809-40b6-814f-0c85376914d3"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill_Aoe"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2989debb-1dcc-4199-a5d5-7ffaa5322c23"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill_Projectile"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1205,7 +1245,9 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         // InGame
         m_InGame = asset.FindActionMap("InGame", throwIfNotFound: true);
-        m_InGame_Click = m_InGame.FindAction("Click", throwIfNotFound: true);
+        m_InGame_Move = m_InGame.FindAction("Move", throwIfNotFound: true);
+        m_InGame_Skill_Aoe = m_InGame.FindAction("Skill_Aoe", throwIfNotFound: true);
+        m_InGame_Skill_Projectile = m_InGame.FindAction("Skill_Projectile", throwIfNotFound: true);
     }
 
     ~@GlobalInput()
@@ -1667,7 +1709,9 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
     // InGame
     private readonly InputActionMap m_InGame;
     private List<IInGameActions> m_InGameActionsCallbackInterfaces = new List<IInGameActions>();
-    private readonly InputAction m_InGame_Click;
+    private readonly InputAction m_InGame_Move;
+    private readonly InputAction m_InGame_Skill_Aoe;
+    private readonly InputAction m_InGame_Skill_Projectile;
     /// <summary>
     /// Provides access to input actions defined in input action map "InGame".
     /// </summary>
@@ -1680,9 +1724,17 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
         /// </summary>
         public InGameActions(@GlobalInput wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "InGame/Click".
+        /// Provides access to the underlying input action "InGame/Move".
         /// </summary>
-        public InputAction @Click => m_Wrapper.m_InGame_Click;
+        public InputAction @Move => m_Wrapper.m_InGame_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "InGame/Skill_Aoe".
+        /// </summary>
+        public InputAction @Skill_Aoe => m_Wrapper.m_InGame_Skill_Aoe;
+        /// <summary>
+        /// Provides access to the underlying input action "InGame/Skill_Projectile".
+        /// </summary>
+        public InputAction @Skill_Projectile => m_Wrapper.m_InGame_Skill_Projectile;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1709,9 +1761,15 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_InGameActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_InGameActionsCallbackInterfaces.Add(instance);
-            @Click.started += instance.OnClick;
-            @Click.performed += instance.OnClick;
-            @Click.canceled += instance.OnClick;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Skill_Aoe.started += instance.OnSkill_Aoe;
+            @Skill_Aoe.performed += instance.OnSkill_Aoe;
+            @Skill_Aoe.canceled += instance.OnSkill_Aoe;
+            @Skill_Projectile.started += instance.OnSkill_Projectile;
+            @Skill_Projectile.performed += instance.OnSkill_Projectile;
+            @Skill_Projectile.canceled += instance.OnSkill_Projectile;
         }
 
         /// <summary>
@@ -1723,9 +1781,15 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
         /// <seealso cref="InGameActions" />
         private void UnregisterCallbacks(IInGameActions instance)
         {
-            @Click.started -= instance.OnClick;
-            @Click.performed -= instance.OnClick;
-            @Click.canceled -= instance.OnClick;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Skill_Aoe.started -= instance.OnSkill_Aoe;
+            @Skill_Aoe.performed -= instance.OnSkill_Aoe;
+            @Skill_Aoe.canceled -= instance.OnSkill_Aoe;
+            @Skill_Projectile.started -= instance.OnSkill_Projectile;
+            @Skill_Projectile.performed -= instance.OnSkill_Projectile;
+            @Skill_Projectile.canceled -= instance.OnSkill_Projectile;
         }
 
         /// <summary>
@@ -1981,11 +2045,25 @@ public partial class @GlobalInput: IInputActionCollection2, IDisposable
     public interface IInGameActions
     {
         /// <summary>
-        /// Method invoked when associated input action "Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnClick(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Skill_Aoe" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSkill_Aoe(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Skill_Projectile" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSkill_Projectile(InputAction.CallbackContext context);
     }
 }

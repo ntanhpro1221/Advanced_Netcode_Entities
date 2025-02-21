@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [UpdateInGroup(typeof(GhostInputSystemGroup))]
-public partial class ChampionInputSystem : SystemBase {
+public partial class ChampionMoveInputSystem : SystemBase {
     private GlobalInput     _input;
     private CollisionFilter _groundCastFilter;
     private EntityQuery     _ownerChampionQuery;
@@ -42,7 +42,7 @@ public partial class ChampionInputSystem : SystemBase {
         base.OnStartRunning();
 
         _input.Enable();
-        _input.InGame.Click.performed += OnClick;
+        _input.InGame.Move.performed += OnClick;
 
         _groundCastFilter = new() {
             BelongsTo    = (uint)LayerMaskHelper.RayCast
@@ -62,7 +62,7 @@ public partial class ChampionInputSystem : SystemBase {
     protected override void OnStopRunning() {
         base.OnStopRunning();
 
-        _input.InGame.Click.performed -= OnClick;
+        _input.InGame.Move.performed -= OnClick;
         _input.Disable();
     }
 

@@ -2,7 +2,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
-using UnityEngine;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 public partial struct GoInGameServerSystem : ISystem {
@@ -10,6 +9,7 @@ public partial struct GoInGameServerSystem : ISystem {
 
     [BurstCompile]
     public void OnCreate(ref SystemState state) {
+        state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<PrefabHub>();
 
         _goInGameRequestQuery = new EntityQueryBuilder(Allocator.Temp)
@@ -20,11 +20,11 @@ public partial struct GoInGameServerSystem : ISystem {
         state.RequireForUpdate(_goInGameRequestQuery);
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-        var ecb = state
-            .World
-            .GetExistingSystemManaged<EndSimulationEntityCommandBufferSystem>()
-            .CreateCommandBuffer();
+        var ecb = SystemAPI
+            .GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+            .CreateCommandBuffer(state.WorldUnmanaged);
 
         var prefabHub = SystemAPI.GetSingleton<PrefabHub>();
 
@@ -54,8 +54,6 @@ public partial struct GoInGameServerSystem : ISystem {
               , new LinkedEntityGroup {
                     Value = champEntity
                 });
-
-            Debug.Log("Server mark in-game: " + entity + " with team-type = " + goInGameRequest.ValueRO.teamType);
         }
     }
 }
