@@ -10,6 +10,8 @@ public struct DestroyAtTickData : IComponentData {
     [GhostField] public NetworkTick tick;
 }
 
+public struct AutoDestroyTag : IComponentData { }
+
 public class AutoDestroyAuthoring : MonoBehaviour {
     [SerializeField] private float lifeTime;
 

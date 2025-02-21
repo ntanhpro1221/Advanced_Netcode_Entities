@@ -194,7 +194,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   champion: {fileID: 2447223309091411384, guid: 1b05504788f694c46b43cb8cef9dc708, type: 3}
   soldier: {fileID: 2329621028254080349, guid: 6aed97900990bd04685ecfdf34a7270b, type: 3}
-  lmao: {fileID: 737240522828505911, guid: ef32cd1adde03df4d93f0102381949fa, type: 3}
 --- !u!4 &303917512
 Transform:
   m_ObjectHideFlags: 0
@@ -218,13 +217,82 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2545869472662799458, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: value
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6344514015675299986, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
       propertyPath: m_Name
-      value: Tower
+      value: BlueTower
       objectReference: {fileID: 0}
     - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
       propertyPath: m_LocalPosition.x
+      value: 3.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+--- !u!1001 &1193852931
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -2545869472662799458, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: value
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6344514015675299986, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_Name
+      value: RedTower
+      objectReference: {fileID: 0}
+    - target: {fileID: 7304387321842289255, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 66d6f44084c6ea047b15eae3d1a294f6, type: 2}
+    - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.08
       objectReference: {fileID: 0}
     - target: {fileID: 8509969639684788035, guid: db4ff64e37a14e84a89c94a45650de81, type: 3}
       propertyPath: m_LocalPosition.y
@@ -384,3 +452,4 @@ SceneRoots:
   - {fileID: 303917512}
   - {fileID: 254107303}
   - {fileID: 470056408}
+  - {fileID: 1193852931}

@@ -1,4 +1,5 @@
 ﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 
@@ -7,13 +8,10 @@ public partial struct RegisterAutoDestroySystem : ISystem {
     [BurstCompile]
     public void OnCreate(ref SystemState state) {
         state.RequireForUpdate<NetworkTime>();
-        state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
     }
 
     public void OnUpdate(ref SystemState state) {
-        var ecb = SystemAPI
-            .GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
-            .CreateCommandBuffer(state.WorldUnmanaged);
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
 
         var tickRate = NetCodeConfig.Global.ClientServerTickRate.SimulationTickRate;
         var curTick  = SystemAPI.GetSingleton<NetworkTime>().ServerTick;
@@ -29,5 +27,8 @@ public partial struct RegisterAutoDestroySystem : ISystem {
             destroyTick.Add((uint)(destroyRegisterData.ValueRO.lifeTime * tickRate));
             ecb.AddComponent(entity, new DestroyAtTickData { tick = destroyTick });
         }
+        
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
     }
 }

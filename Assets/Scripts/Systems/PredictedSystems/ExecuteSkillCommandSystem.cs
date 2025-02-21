@@ -1,4 +1,5 @@
 ﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
@@ -8,16 +9,12 @@ using Unity.Transforms;
 public partial struct ExecuteSkillCommandSystem : ISystem {
     [BurstCompile]
     public void OnCreate(ref SystemState state) {
-        state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<NetworkTime>();
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-        var ecb = SystemAPI
-            .GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
-            .CreateCommandBuffer(state.WorldUnmanaged);
-
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
         
         if (!SystemAPI.GetSingleton<NetworkTime>().IsFirstTimeFullyPredictingTick) return;
 
@@ -37,6 +34,9 @@ public partial struct ExecuteSkillCommandSystem : ISystem {
                 ecb.SetComponent(entity, skill.Team);
             }
         }
+        
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
     }
 }
 

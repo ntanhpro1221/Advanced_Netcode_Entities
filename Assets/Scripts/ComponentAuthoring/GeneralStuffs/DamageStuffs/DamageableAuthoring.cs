@@ -11,11 +11,6 @@ public struct IncomingDamageBuffer : IBufferElementData {
     public int value;
 }
 
-public struct DamageThisTickBuffer : ICommandData {
-    public NetworkTick Tick { get; set; }
-    public int         value;
-}
-
 public class DamageableAuthoring : MonoBehaviour {
     [SerializeField] private int maxHealth;
 
@@ -29,7 +24,6 @@ public class DamageableAuthoring : MonoBehaviour {
                 });
 
             AddBuffer<IncomingDamageBuffer>(entity);
-            AddBuffer<DamageThisTickBuffer>(entity);
         }
     }
 }

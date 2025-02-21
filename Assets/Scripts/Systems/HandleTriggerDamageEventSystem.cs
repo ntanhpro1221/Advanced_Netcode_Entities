@@ -3,27 +3,40 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using UnityEngine;
 
-[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+[UpdateInGroup(typeof(PhysicsSystemGroup))]
 [UpdateAfter(typeof(PhysicsSimulationGroup))]
-[UpdateBefore(typeof(EndFixedStepSimulationEntityCommandBufferSystem))]
 public partial struct HandleTriggerDamageEventSystem : ISystem {
+    private BufferLookup<AlreadyDamageBuffer>  alreadyDamageLookup;
+    private BufferLookup<IncomingDamageBuffer> incomingDamageLookup;
+    private ComponentLookup<TeamTypeData>      teamTypeLookup;
+    private ComponentLookup<TriggerDamageData> triggerDamageLookup;
+
     public void OnCreate(ref SystemState state) {
         state.RequireForUpdate<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<SimulationSingleton>();
+
+        alreadyDamageLookup  = state.GetBufferLookup<AlreadyDamageBuffer>();
+        incomingDamageLookup = state.GetBufferLookup<IncomingDamageBuffer>();
+        teamTypeLookup       = state.GetComponentLookup<TeamTypeData>();
+        triggerDamageLookup  = state.GetComponentLookup<TriggerDamageData>();
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
+        alreadyDamageLookup.Update(ref state);
+        incomingDamageLookup.Update(ref state);
+        teamTypeLookup.Update(ref state);
+        triggerDamageLookup.Update(ref state);
+
         state.Dependency = new Job {
             ecb = SystemAPI
                 .GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged)
-          , alreadyDamageLookup  = state.GetBufferLookup<AlreadyDamageBuffer>()
-          , incomingDamageLookup = state.GetBufferLookup<IncomingDamageBuffer>()
-          , teamTypeLookup       = state.GetComponentLookup<TeamTypeData>()
-          , triggerDamageLookup  = state.GetComponentLookup<TriggerDamageData>()
+          , alreadyDamageLookup  = alreadyDamageLookup
+          , incomingDamageLookup = incomingDamageLookup
+          , teamTypeLookup       = teamTypeLookup
+          , triggerDamageLookup  = triggerDamageLookup
         }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
     }
 
@@ -37,7 +50,6 @@ public partial struct HandleTriggerDamageEventSystem : ISystem {
         [ReadOnly] public ComponentLookup<TriggerDamageData> triggerDamageLookup;
 
         public void Execute(TriggerEvent triggerEvent) {
-            Debug.Log("trigger");
             // not have team
             if (!teamTypeLookup.HasComponent(triggerEvent.EntityA)
              || !teamTypeLookup.HasComponent(triggerEvent.EntityB)) return;
@@ -63,7 +75,8 @@ public partial struct HandleTriggerDamageEventSystem : ISystem {
             foreach (var alreadyDamage in alreadyDamageList)
                 if (alreadyDamage.entity == receiver)
                     return;
-            Debug.Log("append to buffer");
+            
+            ecb.AppendToBuffer(sender, new AlreadyDamageBuffer { entity = receiver });
             ecb.AppendToBuffer(receiver, new IncomingDamageBuffer { value = triggerDamageLookup[sender].value });
         }
     }

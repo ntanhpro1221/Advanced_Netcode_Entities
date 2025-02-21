@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 2623781998275668238}
   - component: {fileID: -2545869472662799458}
   - component: {fileID: -6908132545759880836}
-  - component: {fileID: 2672275574520021067}
+  - component: {fileID: 6237713703845829093}
   m_Layer: 8
   m_Name: Tower
   m_TagString: Untagged
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 500
---- !u!54 &2672275574520021067
+--- !u!54 &6237713703845829093
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

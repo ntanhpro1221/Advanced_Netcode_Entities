@@ -1,13 +1,11 @@
 using UnityEngine;
 
 public class Alice : MonoBehaviour {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() {
-
+    private void OnTriggerEnter(Collider other) {
+        Debug.Log($"{name} trigger {other.name}");
     }
 
-    // Update is called once per frame
-    void Update() {
-
+    private void OnCollisionEnter(Collision other) {
+        Debug.Log($"{name} collision {other.collider.name}");
     }
 }   
