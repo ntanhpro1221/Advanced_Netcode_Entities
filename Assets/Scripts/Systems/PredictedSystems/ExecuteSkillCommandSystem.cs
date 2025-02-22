@@ -12,20 +12,27 @@ public partial struct ExecuteSkillCommandSystem : ISystem {
         state.RequireForUpdate<NetworkTime>();
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state) {
         var ecb = new EntityCommandBuffer(Allocator.Temp);
-        
-        if (!SystemAPI.GetSingleton<NetworkTime>().IsFirstTimeFullyPredictingTick) return;
 
+        var networkTime = SystemAPI.GetSingleton<NetworkTime>();
+        if (!networkTime.IsFirstTimeFullyPredictingTick) return;
+        var curTick = networkTime.ServerTick;
+        
         foreach (var skill in SystemAPI.Query<SkillAspect>().WithAll<Simulate>()) {
-            if (skill.ShouldAoe) {
+            if (skill.ShouldAoe(curTick)) {
                 Entity entity = ecb.Instantiate(skill.AoeEntity);
                 ecb.SetComponent(entity, LocalTransform.FromPositionRotationScale(
                     skill.AttackPosition
                   , quaternion.identity
                   , 5));
                 ecb.SetComponent(entity, skill.Team);
+                
+                // cooldown
+                var doneTick = networkTime.ServerTick;
+                doneTick.Add((uint)(skill.aoeSkillInfo.ValueRO.coolDownTime * NetCodeConfig.Global.ClientServerTickRate.SimulationTickRate));
+                skill.aoeSkillInfo.ValueRW.doneAtTick = doneTick;
+                skill.aoeSkillInfo.ValueRW.startAtTick = networkTime.ServerTick;
             }
 
             if (skill.ShouldProjectile) {

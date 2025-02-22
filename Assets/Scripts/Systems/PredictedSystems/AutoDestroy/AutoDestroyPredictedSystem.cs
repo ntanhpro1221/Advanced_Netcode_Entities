@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using Unity.NetCode;
 using Unity.Transforms;
 
-[UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
+[UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderLast = true)]
 public partial struct AutoDestroyPredictedSystem : ISystem {
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {

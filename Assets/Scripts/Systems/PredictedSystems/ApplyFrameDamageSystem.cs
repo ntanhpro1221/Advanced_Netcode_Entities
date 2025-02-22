@@ -2,7 +2,6 @@
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
-using UnityEngine;
 
 namespace Systems.PredictedSystems {
     [UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderLast = true)]
@@ -27,11 +26,13 @@ namespace Systems.PredictedSystems {
                 int totalDamage = 0;
                 foreach (var incomingDamage in incomingDamageBuffer)
                     totalDamage += incomingDamage.value;
+                
+                // clear damage buffer
                 incomingDamageBuffer.Clear();
-
+                
                 // apply damage
                 health.ValueRW.current -= totalDamage;
-
+                
                 // die handle (destroy)
                 if (health.ValueRW.current <= 0) {
                     ecb.AddComponent<AutoDestroyTag>(entity);

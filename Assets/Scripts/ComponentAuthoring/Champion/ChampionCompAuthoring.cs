@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
 
@@ -9,14 +10,15 @@ public struct ChampionChildRefData : IComponentData {
 }
 
 public struct SkillInputData : IInputComponentData {
-    public InputEvent aoe;
-    public InputEvent projectile;
+    [GhostField] public InputEvent aoe;
+    [GhostField] public InputEvent projectile;
 }
 
 public struct SkillPrefabData : IComponentData {
     public Entity aoe;
     public Entity projectile;
 }
+
 
 public class ChampionCompAuthoring : MonoBehaviour {
     public GameObject bodyMesh;

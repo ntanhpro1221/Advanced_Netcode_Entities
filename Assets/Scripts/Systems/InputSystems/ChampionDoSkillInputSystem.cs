@@ -1,5 +1,6 @@
 ﻿using Unity.Entities;
 using Unity.NetCode;
+using UnityEngine.InputSystem;
 
 [UpdateInGroup(typeof(GhostInputSystemGroup))]
 public partial class ChampionDoSkillInputSystem : SystemBase {
@@ -28,7 +29,7 @@ public partial class ChampionDoSkillInputSystem : SystemBase {
             newInputValue.aoe.Set();
         if (_input.InGame.Skill_Projectile.WasPressedThisFrame())
             newInputValue.projectile.Set();
-        
+
         foreach (var skillInput in SystemAPI.Query<RefRW<SkillInputData>>())
             skillInput.ValueRW = newInputValue;
     }

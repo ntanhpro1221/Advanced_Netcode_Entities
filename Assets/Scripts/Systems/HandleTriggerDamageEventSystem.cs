@@ -7,37 +7,39 @@ using Unity.Physics.Systems;
 [UpdateInGroup(typeof(PhysicsSystemGroup))]
 [UpdateAfter(typeof(PhysicsSimulationGroup))]
 public partial struct HandleTriggerDamageEventSystem : ISystem {
-    private BufferLookup<AlreadyDamageBuffer>  alreadyDamageLookup;
-    private BufferLookup<IncomingDamageBuffer> incomingDamageLookup;
-    private ComponentLookup<TeamTypeData>      teamTypeLookup;
-    private ComponentLookup<TriggerDamageData> triggerDamageLookup;
+    private BufferLookup<AlreadyDamageBuffer>  _alreadyDamageLookup;
+    private BufferLookup<IncomingDamageBuffer> _incomingDamageLookup;
+    private ComponentLookup<TeamTypeData>      _teamTypeLookup;
+    private ComponentLookup<TriggerDamageData> _triggerDamageLookup;
 
     public void OnCreate(ref SystemState state) {
-        state.RequireForUpdate<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<SimulationSingleton>();
 
-        alreadyDamageLookup  = state.GetBufferLookup<AlreadyDamageBuffer>();
-        incomingDamageLookup = state.GetBufferLookup<IncomingDamageBuffer>();
-        teamTypeLookup       = state.GetComponentLookup<TeamTypeData>();
-        triggerDamageLookup  = state.GetComponentLookup<TriggerDamageData>();
+        _alreadyDamageLookup  = state.GetBufferLookup<AlreadyDamageBuffer>();
+        _incomingDamageLookup = state.GetBufferLookup<IncomingDamageBuffer>();
+        _teamTypeLookup       = state.GetComponentLookup<TeamTypeData>();
+        _triggerDamageLookup  = state.GetComponentLookup<TriggerDamageData>();
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-        alreadyDamageLookup.Update(ref state);
-        incomingDamageLookup.Update(ref state);
-        teamTypeLookup.Update(ref state);
-        triggerDamageLookup.Update(ref state);
+        _alreadyDamageLookup.Update(ref state);
+        _incomingDamageLookup.Update(ref state);
+        _teamTypeLookup.Update(ref state);
+        _triggerDamageLookup.Update(ref state);
 
-        state.Dependency = new Job {
-            ecb = SystemAPI
-                .GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged)
-          , alreadyDamageLookup  = alreadyDamageLookup
-          , incomingDamageLookup = incomingDamageLookup
-          , teamTypeLookup       = teamTypeLookup
-          , triggerDamageLookup  = triggerDamageLookup
-        }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
+        var ecb = new EntityCommandBuffer(Allocator.TempJob);
+        
+        new Job {
+            ecb = ecb
+          , alreadyDamageLookup  = _alreadyDamageLookup
+          , incomingDamageLookup = _incomingDamageLookup
+          , teamTypeLookup       = _teamTypeLookup
+          , triggerDamageLookup  = _triggerDamageLookup
+        }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency).Complete();
+        
+        ecb.Playback(state.EntityManager); 
+        ecb.Dispose();
     }
 
     [BurstCompile]
